@@ -6,7 +6,7 @@
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Web](https://img.shields.io/badge/Platform-Web-orange.svg)](https://flutter.dev/web)
 
-[🚀 **Live Demo**](https://YOUR_USERNAME.github.io/YOUR_REPO/) | [📖 Documentation](DEPLOY_WEB.md) | [🐛 Report Bug](../../issues)
+[🚀 **Live Demo**](https://vqthanh1412489.github.io/ai-translation-app/) | [📖 Documentation](DEPLOY_WEB.md) | [🐛 Report Bug](https://github.com/vqthanh1412489/ai-translation-app/issues)
 
 ---
 
@@ -39,7 +39,7 @@
 
 ### **Web App (Recommended)**
 
-Visit the live demo: [https://YOUR_USERNAME.github.io/YOUR_REPO/](https://YOUR_USERNAME.github.io/YOUR_REPO/)
+Visit the live demo: [https://vqthanh1412489.github.io/ai-translation-app/](https://vqthanh1412489.github.io/ai-translation-app/)
 
 1. Click **Settings** (⚙️)
 2. Enter your **API Key** and **Base URL**
@@ -51,8 +51,8 @@ Visit the live demo: [https://YOUR_USERNAME.github.io/YOUR_REPO/](https://YOUR_U
 
 ```bash
 # Clone repository
-git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
-cd YOUR_REPO
+git clone https://github.com/vqthanh1412489/ai-translation-app.git
+cd ai-translation-app
 
 # Install dependencies
 flutter pub get
