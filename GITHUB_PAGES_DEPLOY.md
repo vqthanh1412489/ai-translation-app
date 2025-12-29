@@ -75,8 +75,8 @@ https://quocthanhvu.github.io/ai-translation-app/
 Khi có thay đổi code:
 
 ```bash
-# 1. Build lại web
-flutter build web --release
+# 1. Build lại web với đúng base-href
+flutter build web --release --base-href /ai-translation-app/
 
 # 2. Copy sang docs/
 rm -rf docs/*
@@ -99,6 +99,17 @@ GitHub Pages sẽ tự động deploy phiên bản mới!
 - Check Settings → Pages xem đã enable chưa
 - Đảm bảo folder là `/docs` không phải `/root`
 
+### **Lỗi: "404 - flutter_bootstrap.js not found"**
+✅ **ĐÃ FIX**: Build với đúng base-href:
+```bash
+flutter build web --release --base-href /ai-translation-app/
+```
+
+Check `docs/index.html` - đảm bảo base href đúng:
+```html
+<base href="/ai-translation-app/" />
+```
+
 ### **Lỗi: "404 when refresh page"**
 Thêm file `docs/404.html`:
 ```html
@@ -109,7 +120,7 @@ Thêm file `docs/404.html`:
   <script>
     sessionStorage.redirect = location.href;
   </script>
-  <meta http-equiv="refresh" content="0;URL='/YOUR_REPO'">
+  <meta http-equiv="refresh" content="0;URL='/ai-translation-app'">
 </head>
 </html>
 ```
@@ -117,7 +128,14 @@ Thêm file `docs/404.html`:
 ### **Lỗi: Assets không load**
 Check `web/index.html` - đảm bảo base href đúng:
 ```html
-<base href="/YOUR_REPO/">
+<base href="/ai-translation-app/">
+```
+
+### **Warning: apple-mobile-web-app-capable deprecated**
+✅ **ĐÃ FIX**: Thêm meta tag mới trong `web/index.html`:
+```html
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
 ```
 
 ---
