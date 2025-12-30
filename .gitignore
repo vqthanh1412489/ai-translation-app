@@ -48,3 +48,6 @@ app.*.map.json
 /macos/Flutter/ephemeral/
 /macos/Flutter/Flutter-Generated.xcconfig
 /macos/Flutter/GeneratedPluginRegistrant.swift
+
+# Deployment scripts (private)
+deploy_web.sh
