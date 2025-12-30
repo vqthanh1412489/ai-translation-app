@@ -51,3 +51,6 @@ app.*.map.json
 
 # Deployment scripts (private)
 deploy_web.sh
+
+# Internal guides and documentation (private)
+guides/
