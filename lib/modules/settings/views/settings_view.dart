@@ -31,14 +31,7 @@ class SettingsView extends GetView<SettingsController> {
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 16),
-            TextField(
-              decoration: const InputDecoration(
-                labelText: 'Base URL',
-                hintText: 'https://api.openai.com/v1/chat/completions',
-              ),
-              controller: TextEditingController(text: settings.baseUrl),
-              onChanged: controller.updateBaseUrl,
-            ),
+            _buildBaseUrlSelector(context, settings.baseUrl),
             const SizedBox(height: 16),
             TextField(
               decoration: const InputDecoration(
@@ -127,6 +120,7 @@ class SettingsView extends GetView<SettingsController> {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextField(
                   decoration: const InputDecoration(labelText: 'Model'),
@@ -136,8 +130,9 @@ class SettingsView extends GetView<SettingsController> {
                 const SizedBox(height: 8),
                 TextField(
                   decoration: const InputDecoration(
-                    labelText: 'Temperature',
-                    helperText: 'Nhấn Enter để lưu',
+                    labelText: 'Temperature (Độ sáng tạo: 0-1)',
+                    helperText:
+                        '0 = chính xác, nhất quán | 1 = sáng tạo, đa dạng. Nhấn Enter để lưu',
                   ),
                   controller: TextEditingController(
                     text: agent.temperature.toString(),
@@ -151,8 +146,9 @@ class SettingsView extends GetView<SettingsController> {
                 const SizedBox(height: 8),
                 TextField(
                   decoration: const InputDecoration(
-                    labelText: 'Max Tokens',
-                    helperText: 'Nhấn Enter để lưu',
+                    labelText: 'Max Tokens (Giới hạn độ dài output)',
+                    helperText:
+                        'Số token tối đa cho câu trả lời (~1 token ≈ 0.75 từ). Nhấn Enter để lưu',
                   ),
                   controller: TextEditingController(
                     text: agent.maxTokens.toString(),
@@ -162,11 +158,114 @@ class SettingsView extends GetView<SettingsController> {
                     agent.copyWith(maxTokens: int.tryParse(value) ?? 2000),
                   ),
                 ),
+                const SizedBox(height: 16),
+                const Divider(),
+                const SizedBox(height: 8),
+                Text(
+                  'Prompts Configuration',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  decoration: const InputDecoration(
+                    labelText: 'System Prompt',
+                    helperText: 'Prompt hệ thống cho agent này',
+                    border: OutlineInputBorder(),
+                  ),
+                  controller: TextEditingController(text: agent.systemPrompt),
+                  maxLines: 5,
+                  onChanged: (value) =>
+                      onUpdate(agent.copyWith(systemPrompt: value)),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  decoration: const InputDecoration(
+                    labelText: 'User Prompt Template',
+                    helperText:
+                        'Template prompt tùy chỉnh (có thể dùng {{VARIABLE}})',
+                    border: OutlineInputBorder(),
+                  ),
+                  controller:
+                      TextEditingController(text: agent.userPromptTemplate),
+                  maxLines: 10,
+                  onChanged: (value) =>
+                      onUpdate(agent.copyWith(userPromptTemplate: value)),
+                ),
               ],
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildBaseUrlSelector(BuildContext context, String currentUrl) {
+    // Predefined URLs
+    const String openAiUrl = 'https://api.openai.com/v1/chat/completions';
+    const String bieApiUrl = 'https://api.bieapi.com/v1/chat/completions';
+    const String customOption = 'custom';
+
+    // Determine current selection
+    String selectedOption;
+    if (currentUrl == openAiUrl) {
+      selectedOption = openAiUrl;
+    } else if (currentUrl == bieApiUrl) {
+      selectedOption = bieApiUrl;
+    } else {
+      selectedOption = customOption;
+    }
+
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            DropdownButtonFormField<String>(
+              decoration: const InputDecoration(
+                labelText: 'Base URL',
+                border: OutlineInputBorder(),
+              ),
+              value: selectedOption,
+              items: const [
+                DropdownMenuItem(
+                  value: openAiUrl,
+                  child: Text('OpenAI (mặc định)'),
+                ),
+                DropdownMenuItem(
+                  value: bieApiUrl,
+                  child: Text('BieAPI'),
+                ),
+                DropdownMenuItem(
+                  value: customOption,
+                  child: Text('Custom URL'),
+                ),
+              ],
+              onChanged: (value) {
+                setState(() {
+                  selectedOption = value!;
+                  if (value != customOption) {
+                    controller.updateBaseUrl(value);
+                  }
+                });
+              },
+            ),
+            if (selectedOption == customOption) ...[
+              const SizedBox(height: 12),
+              TextField(
+                decoration: const InputDecoration(
+                  labelText: 'Custom Base URL',
+                  hintText: 'https://your-api.com/v1/chat/completions',
+                  border: OutlineInputBorder(),
+                ),
+                controller: TextEditingController(text: currentUrl),
+                onChanged: controller.updateBaseUrl,
+              ),
+            ],
+          ],
+        );
+      },
     );
   }
 }
